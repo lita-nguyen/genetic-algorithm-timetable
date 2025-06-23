@@ -1,4 +1,3 @@
-import csv
 import random
 from collections import defaultdict, Counter
 
@@ -41,7 +40,7 @@ def fitness(schedule, student_row, popularity):
 
     for course, (day, slot) in schedule.items():
         if (day, slot) in seen:
-            return 0, -1000 
+            return 0, -1000
 
         seen.add((day, slot))
         reward += popularity.get((day, slot), 0)
@@ -58,24 +57,3 @@ def fitness(schedule, student_row, popularity):
                     penalty -= 150
                     break
     return reward, penalty
-
-class Solution: 
-    def __init__(self):
-        courses_file = "./data/courses.csv"
-        students_file = "./data/students.csv"
-        with open(courses_file, "r", encoding="utf-8") as courses:
-            reader = csv.DictReader(courses)
-            self.courses_data = []
-            for row in reader:
-                course_name = row['Course']
-                lecturer = row['Lecturer']
-                slots = [v for k, v in row.items() if k.startswith('Slot') and v.strip() != '']
-                self.courses_data.append({
-                    'Course': course_name,
-                    'Lecturer': lecturer,
-                    'Times': slots
-                })
-        with open(students_file, "r", encoding="utf-8") as students:
-            reader = csv.DictReader(students)
-            self.students_data = [row for row in reader]
-        self.popularity = calculate_popularity(self.students_data)

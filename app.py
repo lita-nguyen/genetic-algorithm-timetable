@@ -1,4 +1,5 @@
-from core.fitness import Solution, random_schedule, fitness, DAY_NAMES
+from utils.fitness import random_schedule, fitness, DAY_NAMES
+from utils.loader import Solution
 
 solution = Solution()
 courses = solution.courses_data
@@ -15,5 +16,7 @@ for student in students:
     print("Lịch học:")
     for course, (day, slot) in sched.items():
         key = f"{DAY_NAMES[day]} {slot}"
-        print(f"  {course}: {DAY_NAMES[day]} {slot} (popularity: {popularity.get((day, slot), 0)}, preference: {student.get(key, '0')})")
+        print(f"  {course}: {DAY_NAMES[day]} {slot} "
+              f"(popularity: {popularity.get((day, slot), 0)}, "
+              f"preference: {student.get(key, '0')})")
     print("---")
