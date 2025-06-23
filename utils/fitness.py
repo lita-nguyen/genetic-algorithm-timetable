@@ -14,16 +14,19 @@ def calculate_popularity(students):
             counter[key] += int(weight)
     return counter
 
-def random_schedule(courses):
+def map_chromosome_to_schedule(courses):
+    # TODO: Convert the chromosome to a schedule
     schedule = {}
     for course in courses:
         parsed = [parse_time(opt) for opt in course['Times']]
         schedule[course['Course']] = random.choice(parsed)
     return schedule
 
-def fitness(schedule, student_row, popularity):
+def calculate_fitness(schedule, popularity):
+    base = 0
     penalty = 0
-    reward = 0
+    result = 0
+
     day_slots = defaultdict(list)
     seen = set()
 
