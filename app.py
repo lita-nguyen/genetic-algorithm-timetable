@@ -1,5 +1,11 @@
-from utils.fitness import random_schedule, fitness, DAY_NAMES
-from utils.loader import Solution
+from utils.fitness import random_schedule, fitness, calculate_popularity
+from utils.loader import load_courses, load_students, DAY_NAMES
+
+class Solution:
+    def __init__(self, courses_file="./data/courses.csv", students_file="./data/students.csv"):
+        self.courses_data = load_courses(courses_file)
+        self.students_data = load_students(students_file)
+        self.popularity = calculate_popularity(self.students_data)
 
 solution = Solution()
 courses = solution.courses_data

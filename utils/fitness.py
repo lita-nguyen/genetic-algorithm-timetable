@@ -1,19 +1,8 @@
 import random
-from collections import defaultdict, Counter
-
-DAYS = {
-    "Monday": 0, 
-    "Tuesday": 1, 
-    "Wednesday": 2,
-    "Thursday": 3, 
-    "Friday": 4, 
-    "Saturday": 5
-}
-DAY_NAMES = list(DAYS.keys())
-
-def parse_time(time_str):
-    day_str, slot = time_str.strip().split()
-    return (DAYS[day_str], int(slot))
+from collections import defaultdict
+from utils.loader import parse_time
+from collections import Counter
+from utils.loader import parse_time, DAYS, DAY_NAMES
 
 def calculate_popularity(students):
     counter = Counter()
@@ -21,8 +10,8 @@ def calculate_popularity(students):
         for time_slot, weight in student.items():
             if time_slot == "Student Name":
                 continue
-            day, slot = time_slot.split()
-            counter[(DAYS[day], int(slot))] += int(weight)
+            key = parse_time(time_slot)
+            counter[key] += int(weight)
     return counter
 
 def random_schedule(courses):
@@ -41,7 +30,6 @@ def fitness(schedule, student_row, popularity):
     for course, (day, slot) in schedule.items():
         if (day, slot) in seen:
             return 0, -1000
-
         seen.add((day, slot))
         reward += popularity.get((day, slot), 0)
         day_slots[day].append(slot)
@@ -51,9 +39,9 @@ def fitness(schedule, student_row, popularity):
 
     for slots in day_slots.values():
         slots = sorted(slots)
-        if len(slots) >= 4:
-            for i in range(len(slots) - 3):
-                if slots[i:i+4] == [1, 2, 3, 4]:
-                    penalty -= 150
+        if len(slots) >= 3:
+            for i in range(len(slots) - 2):
+                if slots[i+2] - slots[i] == 2 and slots[i+1] - slots[i] == 1:
+                    penalty -= 100
                     break
     return reward, penalty
