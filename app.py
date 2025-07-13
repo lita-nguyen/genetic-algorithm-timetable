@@ -2,7 +2,7 @@ from core.chromosome import Chromosome
 from utils.fitness import (
     calculate_fitness,
     calculate_popularity,
-    map_chromosome_to_schedule
+    build_schedule
 )
 from utils.loader import load_courses, load_students, DAY_NAMES
 
@@ -14,12 +14,12 @@ class Solution:
 
     def evaluate_student(self, student):
         chromosome = Chromosome(self.courses)
-        schedule = map_chromosome_to_schedule(chromosome, self.courses)
+        schedule = build_schedule(chromosome, self.courses)
         reward, penalty = calculate_fitness(schedule, self.popularity)
         total_score = reward + penalty
 
-        genes_binary = tuple(chromosome.genes[course["Course"]] for course in self.courses)
-        return [genes_binary, total_score]
+        genes_binary = chromosome.binary_array(self.courses)
+        return (genes_binary, total_score)
 
     def process(self):
         results = []
