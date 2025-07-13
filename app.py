@@ -18,21 +18,16 @@ class Solution:
         reward, penalty = calculate_fitness(schedule, self.popularity)
         total_score = reward + penalty
 
-        print(f"\nSinh viên: {student['name']}")
-        print(f"Tổng điểm: {total_score} (Reward: {reward}, Penalty: {penalty})")
-        print("Lịch học:")
-        for course, (day, slot) in schedule.items():
-            preference = student["schedule"].get((day, slot), 0)
-            popularity_score = self.popularity.get((day, slot), 0)
-            print(f"  - {course}: {DAY_NAMES[day]} {slot} (popularity: {popularity_score}, preference: {preference})")
-
-        print("Gene nhị phân:")
-        print(chromosome)
-        print("-" * 40)
+        genes_binary = tuple(chromosome.genes[course["Course"]] for course in self.courses)
+        return [genes_binary, total_score]
 
     def process(self):
+        results = []
         for student in self.students:
-            self.evaluate_student(student)
+            result = self.evaluate_student(student)
+            results.append(result)
+        for item in results:
+            print(item)
 
 if __name__ == "__main__":
     solution = Solution()

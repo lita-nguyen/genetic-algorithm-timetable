@@ -15,6 +15,3 @@ class Chromosome:
             binary = format(random_index, '03b')
             genes[course_name] = binary
         return genes
-
-    def __str__(self):
-        return "\n".join(f"{course}: {binary}" for course, binary in self.genes.items())
