@@ -12,7 +12,7 @@ def calculate_popularity(student_data):
             popularity_counter[time_slot] += int(weight)
     return popularity_counter
 
-def map_chromosome_to_schedule(chromosome, courses):
+def build_schedule(chromosome, courses):
     schedule = {}
     for course in courses:
         course_name = course["Course"]
