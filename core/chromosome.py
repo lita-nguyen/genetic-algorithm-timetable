@@ -2,9 +2,9 @@ import random
 
 class Chromosome:
     def __init__(self, courses):
-        self.genes = self._generate_genes(courses)
+        self.genes = self._create_genes(courses)
 
-    def _generate_genes(self, courses):
+    def _create_genes(self, courses):
         genes = {}
         for course in courses:
             course_name = course.get("Course")
@@ -16,5 +16,6 @@ class Chromosome:
             genes[course_name] = binary
         return genes
 
-    def __str__(self):
-        return "\n".join(f"{course}: {binary}" for course, binary in self.genes.items())
+    def binary_array(self, course_order):
+        binary_str = ''.join(self.genes[course["Course"]] for course in course_order)
+        return [int(bit) for bit in binary_str]

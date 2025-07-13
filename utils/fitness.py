@@ -12,7 +12,7 @@ def calculate_popularity(student_data):
             popularity_counter[time_slot] += int(weight)
     return popularity_counter
 
-def map_chromosome_to_schedule(chromosome, courses):
+def build_schedule(chromosome, courses):
     schedule = {}
     for course in courses:
         course_name = course["Course"]
@@ -30,16 +30,16 @@ def map_chromosome_to_schedule(chromosome, courses):
     return schedule
 
 def calculate_fitness(schedule, popularity_data):
-    fitness_score = 0
+    reward = 0
     penalty = 0
     used_slots = set()
     day_slots = defaultdict(list)
 
     for course, (day, slot) in schedule.items():
         if (day, slot) in used_slots:
-            return 0, -1000 
+            return 0, -1000
         used_slots.add((day, slot))
-        fitness_score += popularity_data.get((day, slot), 0)
+        reward += popularity_data.get((day, slot), 0)
         day_slots[day].append(slot)
 
     weekday_count = sum(len(day_slots[d]) for d in WEEKDAYS)
@@ -52,5 +52,5 @@ def calculate_fitness(schedule, popularity_data):
         for i in range(len(slots) - 2):
             if slots[i+1] == slots[i] + 1 and slots[i+2] == slots[i] + 2:
                 penalty -= 100
-                break 
-    return fitness_score, penalty
+                break
+    return reward, penalty
