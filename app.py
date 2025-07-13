@@ -25,10 +25,10 @@ class Solution:
         results = []
         for student in self.students:
             result = self.evaluate_student(student)
-            results.append(result)
-        for item in results:
-            print(item)
+            results.append(tuple(result))
+        return results
 
 if __name__ == "__main__":
     solution = Solution()
-    solution.process()
+    all_results = solution.process()
+    print(all_results)
