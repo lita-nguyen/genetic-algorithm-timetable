@@ -15,3 +15,11 @@ class Chromosome:
             binary = format(random_index, '03b')
             genes[course_name] = binary
         return genes
+    
+    def selection(population, tournament_size=2):
+        selected = []
+        for _ in range(len(population)):
+            tournament = random.sample(population, tournament_size)
+            winner = max(tournament, key=lambda x: x[1])
+            selected.append(winner)
+        return selected
