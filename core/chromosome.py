@@ -15,7 +15,7 @@ class Chromosome:
             binary = format(random_index, '03b')
             genes[course_name] = binary
         return genes
-    
+
     def binary_array(self, course_order):
         binary_str = ''.join(self.genes[course["Course"]] for course in course_order)
         return [int(bit) for bit in binary_str]
