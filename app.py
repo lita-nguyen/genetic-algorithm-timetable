@@ -2,9 +2,13 @@ from core.chromosome import Chromosome
 from utils.fitness import (
     calculate_fitness,
     calculate_popularity,
-    map_chromosome_to_schedule
+    build_schedule
 )
 from utils.loader import load_courses, load_students, DAY_NAMES
+from core.selection import selection
+from core.crossover import crossover
+from core.mutation import mutation
+import random
 
 class Solution:
     def __init__(self, courses_file="./data/courses.csv", students_file="./data/students.csv"):
@@ -14,25 +18,42 @@ class Solution:
 
     def evaluate_student(self, student):
         chromosome = Chromosome(self.courses)
-        schedule = map_chromosome_to_schedule(chromosome, self.courses)
+        schedule = build_schedule(chromosome, self.courses)
         reward, penalty = calculate_fitness(schedule, self.popularity)
         total_score = reward + penalty
 
-        print(f"\nSinh viên: {student['name']}")
-        print(f"Tổng điểm: {total_score} (Reward: {reward}, Penalty: {penalty})")
-        print("Lịch học:")
-        for course, (day, slot) in schedule.items():
-            preference = student["schedule"].get((day, slot), 0)
-            popularity_score = self.popularity.get((day, slot), 0)
-            print(f"  - {course}: {DAY_NAMES[day]} {slot} (popularity: {popularity_score}, preference: {preference})")
-
-        print("Gene nhị phân:")
-        print(chromosome)
-        print("-" * 40)
+        genes_binary = chromosome.binary_array(self.courses)
+        return (genes_binary, total_score)
 
     def process(self):
+        population = []
         for student in self.students:
-            self.evaluate_student(student)
+            item = self.evaluate_student(student)
+            population.append(item) 
+        
+        selected1_population = selection(population)
+
+        for _ in range(len(selected1_population)):
+            # pick random 2
+            # chay crossover
+            # test
+            parent_items = random.sample(selected1_population, 2)
+            # parent_items = [(gene[], fit), (gene2[], fit2)]
+            gene, fit = parent_items[0]
+            gene2, fit2 = parent_items[1]
+            child1, child2 = crossover(gene, gene2)
+            mutated1 = mutation(child1)
+            mutated2 = mutation(child2)
+        print(gene, fit)
+        print(gene2, fit2)
+        print(child1, child2)
+        print(mutated1, mutated2)
+        
+
+
+        # print('-----', len(test))
+        # for item in test:
+        #     print(item)
 
 if __name__ == "__main__":
     solution = Solution()
