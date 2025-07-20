@@ -33,7 +33,12 @@ class Solution:
         
         selected1_population = selection(population)
 
-        for _ in range(len(selected1_population)):
+        print('-----selection', len(selected1_population))
+        for item in selected1_population:
+            print(item)
+
+        children = []
+        for _ in range(len(selected1_population) // 2):
             # pick random 2
             # chay crossover
             # test
@@ -41,20 +46,45 @@ class Solution:
             # parent_items = [(gene[], fit), (gene2[], fit2)]
             gene, fit = parent_items[0]
             gene2, fit2 = parent_items[1]
+
             child1, child2 = crossover(gene, gene2)
-            mutated1 = mutation(child1)
-            mutated2 = mutation(child2)
-        print(gene, fit)
-        print(gene2, fit2)
-        print(child1, child2)
-        print(mutated1, mutated2)
+            fit_child1 = self.evaluate_student(child1)
+            fit_child2 = self.evaluate_student(child2)
+
+            children.append((child1, fit_child1))
+            children.append((child2, fit_child2))
+
+            print("Parent1: ", gene, fit)
+            print("Parent2: ", gene2, fit2)
+            print("Child1: ", fit_child1)
+            print("Child2: ", fit_child2)
+
         
+        print('-----crossover', len(children))
 
+        population2 = []
+        for student2 in children:
+            item2 = self.evaluate_student(student2)
+            population2.append(item2) 
+        
+        selected2_population = selection(population2)
 
-        # print('-----', len(test))
-        # for item in test:
-        #     print(item)
-
+        print('-----selection2', len(selected2_population))
+        for item2 in selected2_population:
+            print(item2)
+        print("mutation")
+        population3 = []
+        for gene3, fit3 in selected2_population:
+            gene4 = mutation(gene3)
+            fit4 = self.evaluate_student(gene4)
+            population3.append((fit4))
+            print(fit4)
+        print('-----mutation', len(population3))
+            # mutated1 = mutation(child1)
+            # mutated2 = mutation(child2)
+        # print(mutated1, mutated2)
+        win = max(population3, key=lambda x: x[1])
+        print("win: ", win)
 if __name__ == "__main__":
     solution = Solution()
     solution.process()
