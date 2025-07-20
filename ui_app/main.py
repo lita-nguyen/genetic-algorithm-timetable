@@ -1,6 +1,7 @@
 import gradio as gr
 import pandas as pd
 
+
 reset_tab_style = """
 <style>
 .tabs {
@@ -67,6 +68,20 @@ def preview_csvs(file1, file2):
     return df1, df2
 
 
+def generate_timetable(file1, file2):
+    DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    SHIFTS = ["Shift {i}" for i in range(1, 6)]
+    data = [
+        ["Math", "Physics", "Chemistry", "Biology", "English", "", ""],
+        ["", "PE", "Math", "Physics", "", "", ""],
+        ["Literature", "", "Music", "", "History", "", ""],
+        ["", "", "", "", "", "", ""],
+        ["Art", "", "", "", "Math", "", ""],
+    ]
+    timetable = pd.DataFrame(data, index=SHIFTS, columns=DAYS)
+    return timetable
+
+
 with gr.Blocks() as demo:
     gr.HTML(reset_tab_style)
     gr.Markdown(
@@ -95,26 +110,13 @@ with gr.Blocks() as demo:
                     )
 
             with gr.Row():
-                gr.Button(variant="primary", value="Gen timetable")
-                gr.ClearButton()
+                generate_button = gr.Button(variant="primary", value="Gen timetable")
 
         with gr.Column(scale=2):
             with gr.Tabs():
                 with gr.Tab("Timetable"):
-                    gr.Markdown(
-                        "### 📖 Upload a CSV file to preview the course schedule."
-                    )
-
-        with gr.Column(scale=1):
-            with gr.Tabs():
-                with gr.Tab("File to Demo"):
-                    gr.Gallery(
-                        value=[
-                            "https://github.com/lita-nguyen/genetic-algorithm-timetable/blob/main/data/courses.csv",
-                            "https://github.com/lita-nguyen/genetic-algorithm-timetable/blob/main/data/students.csv",
-                        ],
-                        file_types=[".csv"],
-                        label="📁 Example CSV Files",
+                    timetable_output = gr.Dataframe(
+                        label="📊 Generated Timetable", wrap=True
                     )
 
     file1_input.change(
@@ -126,6 +128,11 @@ with gr.Blocks() as demo:
         fn=preview_csvs,
         inputs=[file1_input, file2_input],
         outputs=[df1_output, df2_output],
+    )
+    generate_button.click(
+        fn=generate_timetable,
+        inputs=[file1_input, file2_input],
+        outputs=timetable_output,
     )
 
 demo.launch()
