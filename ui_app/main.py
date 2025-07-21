@@ -1,5 +1,6 @@
 import gradio as gr
 import pandas as pd
+from app import Solution
 
 
 reset_tab_style = """
@@ -71,13 +72,11 @@ def preview_csvs(file1, file2):
 def generate_timetable(file1, file2):
     DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     SHIFTS = ["Shift {i}" for i in range(1, 6)]
-    data = [
-        ["Math", "Physics", "Chemistry", "Biology", "English", "", ""],
-        ["", "PE", "Math", "Physics", "", "", ""],
-        ["Literature", "", "Music", "", "History", "", ""],
-        ["", "", "", "", "", "", ""],
-        ["Art", "", "", "", "Math", "", ""],
-    ]
+    
+    solution = Solution(file1, file2)
+    winner = solution.process()
+    data = solution.output(winner)
+
     timetable = pd.DataFrame(data, index=SHIFTS, columns=DAYS)
     return timetable
 
@@ -87,7 +86,7 @@ with gr.Blocks() as demo:
     gr.Markdown(
         """
         <h1 style="text-align: center;">Timetabling App</h1>
-        <p style="text-align: center; margin-top: 0;">Môn: Cục xì lầu</p>
+        <p style="text-align: center; margin-top: 0;">Nhập môn Trí tuệ nhân tạo</p>
         """
     )
 

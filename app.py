@@ -73,6 +73,7 @@ class Solution:
 
         win = max(population3, key=lambda x: x[1])
         print("win: ", win)
+        return win
 
     def output(self, chromosome):
         result = [["" for _ in range(7)] for _ in range(5)]
@@ -89,5 +90,5 @@ class Solution:
 
 if __name__ == "__main__":
     solution = Solution()
-    solution.evaluate_student("")
-    solution.process()    
+    winner = solution.process()
+    res = solution.output(winner)
