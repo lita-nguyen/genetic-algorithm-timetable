@@ -12,22 +12,24 @@ def calculate_popularity(student_data):
             popularity_counter[time_slot] += int(weight)
     return popularity_counter
 
-def build_schedule(chromosome, courses):
-    schedule = {}
-    for course in courses:
-        course_name = course["Course"]
-        binary = chromosome.genes.get(course_name)
-        if binary is None:
-            continue
+def chromosome_to_schedule(chromosome,courses):
+    len_arr = len(chromosome)
 
-        slot_index = int(binary, 2)
-        available_slots = course["Slots"]
+    result = []
 
-        if 0 <= slot_index < len(available_slots):
-            schedule[course_name] = available_slots[slot_index]
-        else:
-            schedule[course_name] = random.choice(available_slots)
-    return schedule
+    for i in range(0, len_arr - 3 + 1, 3):
+        string = str(chromosome[i]) + str(chromosome[i + 1]) + str(chromosome[i + 2])
+        dec = binary_to_decimal(string)
+        course_index = i // 3
+        tup = courses[course_index].get("Slots")[dec]
+        result.append(tup)
+    return result
+        
+def binary_to_decimal(binary):
+    decimal = 0
+    for digit in binary:
+        decimal = decimal*2 + int(digit)
+    return decimal
 
 def calculate_fitness(schedule, popularity_data):
     reward = 0
@@ -35,9 +37,9 @@ def calculate_fitness(schedule, popularity_data):
     used_slots = set()
     day_slots = defaultdict(list)
 
-    for course, (day, slot) in schedule.items():
+    for (day, slot) in schedule:
         if (day, slot) in used_slots:
-            return 0, -1000
+            return -1000
         used_slots.add((day, slot))
         reward += popularity_data.get((day, slot), 0)
         day_slots[day].append(slot)
@@ -53,4 +55,5 @@ def calculate_fitness(schedule, popularity_data):
             if slots[i+1] == slots[i] + 1 and slots[i+2] == slots[i] + 2:
                 penalty -= 100
                 break
-    return reward, penalty
+    point = reward + penalty
+    return point
