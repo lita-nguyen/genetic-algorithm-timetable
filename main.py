@@ -72,7 +72,7 @@ def preview_csvs(file1, file2):
 def generate_timetable(file1, file2):
     DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     SHIFTS = ["Shift {i}" for i in range(1, 6)]
-    
+
     solution = Solution(file1, file2)
     winner = solution.process()
     data = solution.output(winner)
